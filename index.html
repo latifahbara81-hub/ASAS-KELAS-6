@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penilaian Sumatif Akhir - PAI SLB Fase C</title>
+    <!-- Tailwind CSS untuk tata letak responsif dan aksesibilitas -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font ramah anak & mudah dibaca -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk ikon pendukung -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #E0F2FE 0%, #FEF3C7 100%);
+            min-height: 100vh;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Gaya Kartun 3D (Claymorphism / Soft 3D) */
+        .card-3d {
+            background: #FFFFFF;
+            border-radius: 28px;
+            box-shadow: 0 12px 0 #CBD5E1, 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 4px solid #F1F5F9;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .btn-3d {
+            border-radius: 22px;
+            font-weight: 800;
+            transition: all 0.15s ease;
+            position: relative;
+            top: 0;
+        }
+        .btn-3d:active {
+            top: 6px;
+            box-shadow: 0 2px 0 rgba(0,0,0,0.2) !important;
+        }
+
+        .btn-blue {
+            background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
+            color: white;
+            box-shadow: 0 8px 0 #0369A1;
+        }
+        .btn-green {
+            background: linear-gradient(180deg, #4ADE80 0%, #16A34A 100%);
+            color: white;
+            box-shadow: 0 8px 0 #15803D;
+        }
+        .btn-amber {
+            background: linear-gradient(180deg, #FBBF24 0%, #D97706 100%);
+            color: white;
+            box-shadow: 0 8px 0 #B45309;
+        }
+        .btn-purple {
+            background: linear-gradient(180deg, #A78BFA 0%, #7C3AED 100%);
+            color: white;
+            box-shadow: 0 8px 0 #5B21B6;
+        }
+        .btn-slate {
+            background: linear-gradient(180deg, #94A3B8 0%, #475569 100%);
+            color: white;
+            box-shadow: 0 8px 0 #334155;
+        }
+
+        /* Kartu Pilihan Jawaban */
+        .option-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            border: 5px solid #E2E8F0;
+            box-shadow: 0 10px 0 #CBD5E1;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .option-card:hover {
+            transform: translateY(-4px);
+            border-color: #38BDF8;
+        }
+        .option-card.selected {
+            background: #FEF9C3;
+            border-color: #F59E0B;
+            box-shadow: 0 10px 0 #D97706;
+            transform: scale(1.02);
+        }
+        .option-card.selected .option-badge {
+            background: #F59E0B;
+            color: white;
+            transform: scale(1.15);
+        }
+
+        /* Efek Animasi Mengambang Halus pada Ilustrasi */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: floatSlow 3.5s ease-in-out infinite;
+        }
+
+        /* Gaya Cetak (Print) */
+        @media print {
+            body { background: white !important; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .card-3d { box-shadow: none !important; border: 2px solid #000 !important; }
+        }
+    </style>
+</head>
+<body class="p-3 sm:p-6 md:p-8 flex flex-col items-center justify-center">
+
+    <!-- ===================================================================== -->
+    <!-- KONTEN UTAMA APLIKASI                                                  -->
+    <!-- ===================================================================== -->
+    <div id="app-container" class="w-full max-w-5xl">
+
+        <!-- 1. HALAMAN PEMBUKA (START SCREEN) -->
+        <section id="screen-start" class="card-3d p-6 sm:p-10 text-center">
+            <div class="inline-block bg-sky-100 text-sky-800 font-extrabold px-5 py-2 rounded-full text-sm sm:text-base mb-4 border-2 border-sky-300">
+                PENDIDIKAN AGAMA ISLAM & BUDI PEKERTI • SLB FASE C
+            </div>
+            
+            <h1 class="text-3xl sm:text-5xl font-black text-slate-800 tracking-tight mb-3">
+                PENILAIAN SUMATIF AKHIR
+            </h1>
+            <p class="text-lg sm:text-xl text-slate-600 font-bold mb-6">
+                Pilih Gambar yang Benar Sesuai Pertanyaan!
+            </p>
+
+            <!-- Ilustrasi Kartun 3D Selamat Datang -->
+            <div class="w-48 h-48 sm:w-56 sm:h-56 mx-auto mb-6 animate-float" id="welcome-illustration">
+                <!-- Diisi oleh JS SVG 3D -->
+            </div>
+
+            <!-- Form Identitas Siswa -->
+            <div class="max-w-md mx-auto bg-slate-50 p-5 sm:p-6 rounded-3xl border-4 border-slate-200 mb-8 text-left">
+                <div class="mb-4">
+                    <label class="block text-slate-700 font-extrabold text-lg mb-2">
+                        <i class="fas fa-child text-sky-500 mr-2"></i>Nama Siswa:
+                    </label>
+                    <input type="text" id="student-name" placeholder="Ketik nama siswa..." 
+                        class="w-full text-xl font-bold p-4 rounded-2xl border-4 border-slate-300 focus:border-sky-500 focus:outline-none bg-white text-slate-800">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-700 font-extrabold text-base mb-1">Kelas:</label>
+                        <input type="text" id="student-class" value="Fase C (Tunagrahita)" 
+                            class="w-full text-base font-bold p-3 rounded-2xl border-4 border-slate-300 focus:border-sky-500 focus:outline-none bg-white text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-slate-700 font-extrabold text-base mb-1">Tanggal:</label>
+                        <input type="date" id="exam-date" 
+                            class="w-full text-base font-bold p-3 rounded-2xl border-4 border-slate-300 focus:border-sky-500 focus:outline-none bg-white text-slate-800">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tombol Utama -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button onclick="startExam()" class="btn-3d btn-green w-full sm:w-auto px-12 py-5 text-2xl sm:text-3xl flex items-center justify-center gap-3">
+                    <i class="fas fa-play-circle"></i> MULAI
+                </button>
+                
+                <button onclick="openTeacherDocsModal()" class="btn-3d btn-purple w-full sm:w-auto px-7 py-5 text-lg sm:text-xl flex items-center justify-center gap-2">
+                    <i class="fas fa-file-word"></i> Dokumen Guru (.DOC)
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. HALAMAN SOAL INTERAKTIF (QUIZ SCREEN) -->
+        <section id="screen-quiz" class="hidden">
+            <!-- Header Kemajuan & Navigasi Atas -->
+            <div class="card-3d p-4 sm:p-5 mb-5 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span id="badge-number" class="bg-sky-500 text-white font-black text-xl sm:text-2xl px-5 py-2 rounded-2xl shadow">
+                        SOAL 1 / 40
+                    </span>
+                    <span id="badge-topic" class="hidden md:inline-block bg-amber-100 text-amber-800 font-extrabold px-4 py-2 rounded-xl text-sm border-2 border-amber-300">
+                        Materi 1: QS Al-Kafirun
+                    </span>
+                </div>
+
+                <!-- Bar Kemajuan Visual -->
+                <div class="flex-1 max-w-xs mx-2 hidden sm:block">
+                    <div class="w-full bg-slate-200 h-5 rounded-full overflow-hidden border-2 border-slate-300">
+                        <div id="progress-bar" class="bg-green-500 h-full transition-all duration-300" style="width: 2.5%;"></div>
+                    </div>
+                </div>
+
+                <button onclick="toggleQuestionMap()" class="btn-3d btn-slate px-4 py-2 text-base flex items-center gap-2">
+                    <i class="fas fa-th"></i> Daftar Soal
+                </button>
+            </div>
+
+            <!-- Kartu Pertanyaan Utama & Gambar Ilustrasi -->
+            <div class="card-3d p-5 sm:p-8 mb-6">
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <!-- Ilustrasi Utama Soal (Besar & Jelas) -->
+                    <div id="main-question-image" class="w-44 h-44 sm:w-56 sm:h-56 flex-shrink-0 bg-sky-50 rounded-3xl border-4 border-sky-200 p-2 flex items-center justify-center animate-float">
+                        <!-- SVG Kartun 3D Utama -->
+                    </div>
+
+                    <!-- Teks Pertanyaan Sederhana + Tombol Suara -->
+                    <div class="flex-1 text-center md:text-left">
+                        <h2 id="question-text" class="text-2xl sm:text-4xl font-black text-slate-800 leading-snug mb-6">
+                            Mana gambar anak yang sedang membaca Al-Qur'an?
+                        </h2>
+
+                        <!-- Tombol Suara Interaktif -->
+                        <div class="flex flex-wrap justify-center md:justify-start gap-3">
+                            <button onclick="speakQuestion()" class="btn-3d btn-blue px-6 py-4 text-lg sm:text-xl flex items-center gap-3">
+                                <i class="fas fa-volume-up text-2xl"></i> BACAKAN SOAL
+                            </button>
+                            <button onclick="repeatQuestion()" class="btn-3d btn-amber px-6 py-4 text-lg sm:text-xl flex items-center gap-3">
+                                <i class="fas fa-redo-alt text-xl"></i> ULANGI PERTANYAAN
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 Pilihan Jawaban Berbentuk Kartu Gambar Besar (A, B, C, D) -->
+            <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-6">
+                <!-- Diisi oleh JavaScript -->
+            </div>
+
+            <!-- Navigasi Bawah: SEBELUMNYA - BERIKUTNYA - SELESAI -->
+            <div class="card-3d p-4 sm:p-5 flex items-center justify-between gap-4">
+                <button id="btn-prev" onclick="prevQuestion()" class="btn-3d btn-slate px-6 sm:px-8 py-4 text-lg sm:text-xl flex items-center gap-2 disabled:opacity-40">
+                    <i class="fas fa-arrow-left"></i> SEBELUMNYA
+                </button>
+
+                <div class="text-center hidden sm:block">
+                    <span id="answered-count" class="text-slate-600 font-extrabold text-lg">Terjawab: 0 / 40</span>
+                </div>
+
+                <button id="btn-next" onclick="nextQuestion()" class="btn-3d btn-blue px-6 sm:px-8 py-4 text-lg sm:text-xl flex items-center gap-2">
+                    BERIKUTNYA <i class="fas fa-arrow-right"></i>
+                </button>
+
+                <button id="btn-finish" onclick="confirmFinish()" class="hidden btn-3d btn-green px-7 sm:px-10 py-4 text-lg sm:text-2xl flex items-center gap-2">
+                    <i class="fas fa-check-circle"></i> SELESAI
+                </button>
+            </div>
+        </section>
+
+        <!-- 3. HALAMAN HASIL NILAI (RESULT SCREEN) -->
+        <section id="screen-result" class="hidden card-3d p-6 sm:p-10 text-center">
+            <div class="inline-block bg-green-100 text-green-800 font-black px-6 py-2 rounded-full text-base mb-3 border-2 border-green-300">
+                ASESMEN SELESAI • HEBAT SEKALI!
+            </div>
+            
+            <h1 class="text-3xl sm:text-5xl font-black text-slate-800 mb-2">HASIL PENILAIAN</h1>
+            <p id="result-student-info" class="text-xl font-bold text-slate-600 mb-6">Nama Siswa: - | Kelas: Fase C</p>
+
+            <!-- Kartu Nilai Besar -->
+            <div class="max-w-lg mx-auto bg-gradient-to-b from-amber-50 to-amber-100 border-4 border-amber-300 rounded-3xl p-6 sm:p-8 mb-8 shadow-inner">
+                <div class="text-amber-800 font-extrabold text-xl mb-1">NILAI AKHIR</div>
+                <div id="final-score" class="text-7xl sm:text-8xl font-black text-amber-600 my-2">100</div>
+                <div id="score-predicate" class="inline-block bg-amber-500 text-white font-black px-6 py-2 rounded-full text-xl mt-2">
+                    SANGAT BAIK ⭐⭐⭐
+                </div>
+
+                <!-- Rekap Benar & Salah -->
+                <div class="grid grid-cols-2 gap-4 mt-6 pt-6 border-t-2 border-amber-200">
+                    <div class="bg-white p-4 rounded-2xl border-2 border-green-300">
+                        <div class="text-green-600 font-extrabold text-base">JAWABAN BENAR</div>
+                        <div id="total-correct" class="text-4xl font-black text-green-600 mt-1">0</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border-2 border-rose-300">
+                        <div class="text-rose-600 font-extrabold text-base">JAWABAN SALAH</div>
+                        <div id="total-wrong" class="text-4xl font-black text-rose-600 mt-1">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rincian Per Materi -->
+            <div class="max-w-3xl mx-auto mb-8 text-left">
+                <h3 class="text-xl font-black text-slate-800 mb-3 text-center">Capaian Per Materi Pembelajaran</h3>
+                <div id="topic-breakdown" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Diisi oleh JS -->
+                </div>
+            </div>
+
+            <!-- Tombol Aksi Hasil -->
+            <div class="flex flex-wrap justify-center gap-4 no-print">
+                <button onclick="window.print()" class="btn-3d btn-blue px-7 py-4 text-lg flex items-center gap-2">
+                    <i class="fas fa-print"></i> Cetak Hasil Asesmen
+                </button>
+                <button onclick="openTeacherKeyModal()" class="btn-3d btn-purple px-7 py-4 text-lg flex items-center gap-2">
+                    <i class="fas fa-key"></i> Kunci Jawaban Guru
+                </button>
+                <button onclick="openTeacherDocsModal()" class="btn-3d btn-amber px-7 py-4 text-lg flex items-center gap-2">
+                    <i class="fas fa-file-word"></i> Unduh Perangkat (.DOC)
+                </button>
+                <button onclick="resetExam()" class="btn-3d btn-slate px-7 py-4 text-lg flex items-center gap-2">
+                    <i class="fas fa-redo"></i> Ulangi Ujian
+                </button>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL DIALOG (PENGGANTI ALERT & FITUR GURU)                           -->
+    <!-- ===================================================================== -->
+
+    <!-- Modal Peta Nomor Soal (1-40) -->
+    <div id="modal-map" class="fixed inset-0 bg-slate-900/70 hidden items-center justify-center p-4 z-50">
+        <div class="card-3d w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-black text-slate-800">Pilih Nomor Soal (1 - 40)</h3>
+                <button onclick="toggleQuestionMap()" class="bg-rose-500 text-white w-10 h-10 rounded-full font-black text-xl">✕</button>
+            </div>
+            <div id="map-grid" class="grid grid-cols-5 sm:grid-cols-8 gap-2">
+                <!-- Tombol nomor 1-40 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Selesai (Ramah & Tanpa Alert Browser) -->
+    <div id="modal-confirm" class="fixed inset-0 bg-slate-900/70 hidden items-center justify-center p-4 z-50">
+        <div class="card-3d w-full max-w-md p-6 sm:p-8 text-center">
+            <div class="text-6xl mb-4">🎉</div>
+            <h3 class="text-2xl sm:text-3xl font-black text-slate-800 mb-2">Sudah Selesai Mengerjakan?</h3>
+            <p id="confirm-unanswered-text" class="text-lg font-bold text-slate-600 mb-6">
+                Semua soal sudah dijawab! Ayo lihat nilaimu.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="closeConfirmModal()" class="btn-3d btn-slate px-6 py-4 text-lg flex-1">
+                    Periksa Lagi
+                </button>
+                <button onclick="finishExam()" class="btn-3d btn-green px-6 py-4 text-lg flex-1">
+                    Ya, Selesai!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Kunci Jawaban Khusus Guru -->
+    <div id="modal-teacher-key" class="fixed inset-0 bg-slate-900/70 hidden items-center justify-center p-4 z-50">
+        <div class="card-3d w-full max-w-4xl p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b-2 pb-3">
+                <h3 class="text-2xl font-black text-purple-800">
+                    <i class="fas fa-key mr-2"></i>Kunci Jawaban & Pembahasan Khusus Guru
+                </h3>
+                <button onclick="closeTeacherKeyModal()" class="bg-rose-500 text-white w-10 h-10 rounded-full font-black text-xl">✕</button>
+            </div>
+            <div id="teacher-key-list" class="space-y-3">
+                <!-- Diisi oleh JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Dokumen Pendukung Guru (.DOC / Google Docs Ready) -->
+    <div id="modal-docs" class="fixed inset-0 bg-slate-900/70 hidden items-center justify-center p-4 z-50">
+        <div class="card-3d w-full max-w-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b-2 pb-3">
+                <h3 class="text-2xl font-black text-slate-800">
+                    <i class="fas fa-folder-open text-purple-600 mr-2"></i>Dokumen Pendukung Guru
+                </h3>
+                <button onclick="closeTeacherDocsModal()" class="bg-rose-500 text-white w-10 h-10 rounded-full font-black text-xl">✕</button>
+            </div>
+            
+            <p class="text-slate-700 font-bold text-base mb-5">
+                Unduh paket perangkat asesmen lengkap yang siap dibuka dan diedit di <strong>Microsoft Word (.doc)</strong> maupun <strong>Google Docs</strong>:
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div class="bg-sky-50 p-4 rounded-2xl border-2 border-sky-200">
+                    <div class="font-black text-sky-900 text-lg mb-1">1. Naskah 40 Soal + Gambar</div>
+                    <p class="text-sm text-sky-800">Lengkap dengan ilustrasi visual setiap soal dan pilihan A-D.</p>
+                </div>
+                <div class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-200">
+                    <div class="font-black text-amber-900 text-lg mb-1">2. Kisi-Kisi Soal SLB Fase C</div>
+                    <p class="text-sm text-amber-800">Tabel capaian pembelajaran, materi, indikator soal, dan nomor soal.</p>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-2xl border-2 border-purple-200">
+                    <div class="font-black text-purple-900 text-lg mb-1">3. Kunci Jawaban & Penskoran</div>
+                    <p class="text-sm text-purple-800">Kunci jawaban 1-40, rubrik penilaian, dan rumus konversi nilai.</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-2xl border-2 border-green-200">
+                    <div class="font-black text-green-900 text-lg mb-1">4. Petunjuk Penggunaan</div>
+                    <p class="text-sm text-green-800">Panduan pendampingan guru bagi peserta didik tunagrahita.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-100 p-4 rounded-2xl mb-6 text-sm text-slate-700">
+                <strong>Cara membuka di Google Docs:</strong> Unduh file di bawah ini, lalu unggah (<em>Upload</em>) ke <strong>Google Drive</strong> Anda dan klik <em>"Buka dengan Google Dokumen"</em>. Semua tabel, gambar, dan format akan otomatis rapi dan dapat diedit.
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="downloadWordDocument()" class="btn-3d btn-blue px-8 py-4 text-xl flex items-center justify-center gap-3">
+                    <i class="fas fa-download"></i> Unduh Perangkat Lengkap (.DOC)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- LOGIKA JAVASCRIPT: GENERATOR ILUSTRASI 3D, BANK 40 SOAL, TTS & DOCS   -->
+    <!-- ===================================================================== -->
+    <script>
+        // Set tanggal hari ini secara otomatis
+        document.getElementById('exam-date').valueAsDate = new Date();
+
+        // =========================================================================
+        // 1. MESIN GENERATOR ILUSTRASI KARTUN 3D (SVG CLAYMORPHISM BERWARNA CERAH)
+        // =========================================================================
+        function create3DScene(type, labelOverlay = "") {
+            // Definisi gradien 3D lembut untuk efek kartun 3D
+            const defs = `
+                <defs>
+                    <radialGradient id="skin3d" cx="35%" cy="30%" r="70%">
+                        <stop offset="0%" stop-color="#FFE0BD"/>
+                        <stop offset="70%" stop-color="#F1C27D"/>
+                        <stop offset="100%" stop-color="#C68642"/>
+                    </radialGradient>
+                    <radialGradient id="sky3d" cx="30%" cy="20%" r="80%">
+                        <stop offset="0%" stop-color="#E0F2FE"/>
+                        <stop offset="100%" stop-color="#7DD3FC"/>
+                    </radialGradient>
+                    <radialGradient id="green3d" cx="30%" cy="20%" r="80%">
+                        <stop offset="0%" stop-color="#BBF7D0"/>
+                        <stop offset="100%" stop-color="#22C55E"/>
+                    </radialGradient>
+                    <radialGradient id="amber3d" cx="30%" cy="20%" r="80%">
+                        <stop offset="0%" stop-color="#FEF08A"/>
+                        <stop offset="100%" stop-color="#F59E0B"/>
+                    </radialGradient>
+                    <radialGradient id="red3d" cx="30%" cy="20%" r="80%">
+                        <stop offset="0%" stop-color="#FECACA"/>
+                        <stop offset="100%" stop-color="#EF4444"/>
+                    </radialGradient>
+                    <radialGradient id="purple3d" cx="30%" cy="20%" r="80%">
+                        <stop offset="0%" stop-color="#E9D5FF"/>
+                        <stop offset="100%" stop-color="#9333EA"/>
+                    </radialGradient>
+                    <filter id="shadow3d" x="-10%" y="-10%" width="120%" height="120%">
+                        <feDropShadow dx="0" dy="6" stdDeviation="4" flood-color="#0F172A" flood-opacity="0.18"/>
+                    </filter>
+                </defs>
+            `;
+
+            // Helper karakter anak muslim 3D (peci / kerudung)
+            const boyHead = (x, y, mood = "happy", hasPeci = true) => {
+                const mouth = mood === "happy" 
+                    ? `<path d="M ${x-10} ${y+10} Q ${x} ${y+22} ${x+10} ${y+10}" stroke="#7C2D12" stroke-width="3.5" fill="none" stroke-linecap="round"/>`
+                    : mood === "sad"
+                    ? `<path d="M ${x-10} ${y+18} Q ${x} ${y+8} ${x+10} ${y+18}" stroke="#7C2D12" stroke-width="3.5" fill="none" stroke-linecap="round"/>`
+                    : `<circle cx="${x}" cy="${y+14}" r="5" fill="#7C2D12"/>`;
+                const peci = hasPeci ? `<path d="M ${x-22} ${y-12} Q ${x} ${y-32} ${x+22} ${y-12} Z" fill="#1E293B"/>` : `<path d="M ${x-23} ${y-8} Q ${x} ${y-30} ${x+23} ${y-8}" fill="#451A03"/>`;
+                return `
+                    <g filter="url(#shadow3d)">
+                        <circle cx="${x}" cy="${y}" r="24" fill="url(#skin3d)"/>
+                        ${peci}
+                        <circle cx="${x-8}" cy="${y-2}" r="3.5" fill="#1E293B"/>
+                        <circle cx="${x+8}" cy="${y-2}" r="3.5" fill="#1E293B"/>
+                        <circle cx="${x-9}" cy="${y-3}" r="1.2" fill="#FFF"/>
+                        <circle cx="${x+7}" cy="${y-3}" r="1.2" fill="#FFF"/>
+                        <circle cx="${x-13}" cy="${y+5}" r="4" fill="#FDA4AF" opacity="0.6"/>
+                        <circle cx="${x+13}" cy="${y+5}" r="4" fill="#FDA4AF" opacity="0.6"/>
+                        ${mouth}
+                    </g>
+                `;
+            };
+
+            const girlHead = (x, y, mood = "happy", hijabColor = "#EC4899") => {
+                const mouth = mood === "happy" 
+                    ? `<path d="M ${x-9} ${y+10} Q ${x} ${y+20} ${x+9} ${y+10}" stroke="#7C2D12" stroke-width="3.5" fill="none" stroke-linecap="round"/>`
+                    : `<path d="M ${x-9} ${y+17} Q ${x} ${y+8} ${x+9} ${y+17}" stroke="#7C2D12" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+                return `
+                    <g filter="url(#shadow3d)">
+                        <path d="M ${x-28} ${y+26} Q ${x-30} ${y-28} ${x} ${y-28} Q ${x+30} ${y-28} ${x+28} ${y+26} Z" fill="${hijabColor}"/>
+                        <circle cx="${x}" cy="${y+2}" r="20" fill="url(#skin3d)"/>
+                        <circle cx="${x-7}" cy="${y}" r="3.2" fill="#1E293B"/>
+                        <circle cx="${x+7}" cy="${y}" r="3.2" fill="#1E293B"/>
+                        <circle cx="${x-12}" cy="${y+6}" r="3.5" fill="#FDA4AF" opacity="0.6"/>
+                        <circle cx="${x+12}" cy="${y+6}" r="3.5" fill="#FDA4AF" opacity="0.6"/>
+                        ${mouth}
+                    </g>
+                `;
+            };
+
+            let content = "";
+            switch(type) {
+                case "welcome":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="40" fill="url(#sky3d)"/>
+                        <circle cx="100" cy="165" rx="65" ry="18" fill="#38BDF8" opacity="0.4"/>
+                        <rect x="45" y="105" width="45" height="55" rx="18" fill="#0284C7"/>
+                        ${boyHead(68, 82, "happy", true)}
+                        <path d="M 110 105 L 155 105 L 162 160 L 103 160 Z" fill="#F43F5E"/>
+                        ${girlHead(132, 82, "happy", "#F43F5E")}
+                        <text x="100" y="38" text-anchor="middle" font-size="22" font-weight="900" fill="#0369A1">ASSALAMU'ALAIKUM</text>
+                    `;
+                    break;
+                case "quran_read":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#green3d)"/>
+                        <rect x="65" y="100" width="70" height="65" rx="20" fill="#15803D"/>
+                        ${boyHead(100, 75, "happy", true)}
+                        <!-- Meja & Al-Quran -->
+                        <rect x="45" y="145" width="110" height="15" rx="6" fill="#92400E"/>
+                        <path d="M 65 142 L 100 132 L 135 142 L 135 122 L 100 115 L 65 122 Z" fill="#FEF08A" stroke="#CA8A04" stroke-width="3"/>
+                        <text x="100" y="38" text-anchor="middle" font-size="18" font-weight="900" fill="#14532D">AL-KAFIRUN</text>
+                    `;
+                    break;
+                case "kaaba":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#amber3d)"/>
+                        <rect x="55" y="55" width="90" height="105" rx="10" fill="#1E293B" filter="url(#shadow3d)"/>
+                        <rect x="55" y="75" width="90" height="14" fill="#FACC15"/>
+                        <rect x="108" y="98" width="18" height="35" rx="3" fill="#FACC15"/>
+                        <text x="100" y="40" text-anchor="middle" font-size="20" font-weight="900" fill="#78350F">KIBLAT UMAT ISLAM</text>
+                    `;
+                    break;
+                case "mosque":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#sky3d)"/>
+                        <path d="M 55 95 Q 100 35 145 95 Z" fill="#16A34A" filter="url(#shadow3d)"/>
+                        <circle cx="100" cy="48" r="8" fill="#FACC15"/>
+                        <rect x="45" y="95" width="110" height="70" rx="10" fill="#FFFFFF" filter="url(#shadow3d)"/>
+                        <path d="M 85 165 L 85 125 Q 100 110 115 125 L 115 165 Z" fill="#0284C7"/>
+                    `;
+                    break;
+                case "church_temple":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#purple3d)"/>
+                        <polygon points="100,40 45,95 155,95" fill="#7E22CE"/>
+                        <rect x="55" y="95" width="90" height="70" rx="8" fill="#F3E8FF"/>
+                        <rect x="88" y="120" width="24" height="45" fill="#6B21A8"/>
+                        <text x="100" y="182" text-anchor="middle" font-size="14" font-weight="800" fill="#FFF">TEMPAT IBADAH LAIN</text>
+                    `;
+                    break;
+                case "pray_islam":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#green3d)"/>
+                        <rect x="35" y="145" width="130" height="25" rx="8" fill="#047857"/>
+                        <rect x="72" y="100" width="56" height="55" rx="18" fill="#FFFFFF"/>
+                        ${boyHead(100, 75, "happy", true)}
+                        <circle cx="75" cy="115" r="10" fill="url(#skin3d)"/>
+                        <circle cx="125" cy="115" r="10" fill="url(#skin3d)"/>
+                    `;
+                    break;
+                case "respect_friends":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#sky3d)"/>
+                        <rect x="35" y="105" width="48" height="60" rx="16" fill="#0284C7"/>
+                        ${boyHead(59, 80, "happy", true)}
+                        <rect x="115" y="105" width="48" height="60" rx="16" fill="#F59E0B"/>
+                        ${boyHead(139, 80, "happy", false)}
+                        <path d="M 80 130 L 118 130" stroke="url(#skin3d)" stroke-width="12" stroke-linecap="round"/>
+                        <text x="100" y="38" text-anchor="middle" font-size="18" font-weight="900" fill="#0369A1">SALING MENGHORMATI</text>
+                    `;
+                    break;
+                case "mocking_bad":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#red3d)"/>
+                        <rect x="35" y="105" width="48" height="60" rx="16" fill="#DC2626"/>
+                        ${boyHead(59, 80, "angry", false)}
+                        <rect x="115" y="105" width="48" height="60" rx="16" fill="#64748B"/>
+                        ${boyHead(139, 80, "sad", true)}
+                        <text x="100" y="38" text-anchor="middle" font-size="18" font-weight="900" fill="#7F1D1D">MENGEJEK TEMAN ❌</text>
+                    `;
+                    break;
+                case "helping_friend":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#amber3d)"/>
+                        <path d="M 45 105 L 85 105 L 92 165 L 38 165 Z" fill="#EC4899"/>
+                        ${girlHead(65, 80, "happy", "#EC4899")}
+                        <rect x="115" y="115" width="48" height="50" rx="16" fill="#3B82F6"/>
+                        ${boyHead(139, 92, "happy", false)}
+                        <path d="M 82 125 L 115 125" stroke="url(#skin3d)" stroke-width="11" stroke-linecap="round"/>
+                        <text x="100" y="38" text-anchor="middle" font-size="18" font-weight="900" fill="#78350F">MENOLONG TEMAN ❤️</text>
+                    `;
+                    break;
+                case "sharing_food":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#green3d)"/>
+                        ${boyHead(60, 75, "happy", true)}
+                        ${girlHead(140, 75, "happy", "#8B5CF6")}
+                        <rect x="75" y="120" width="50" height="35" rx="10" fill="#F97316"/>
+                        <circle cx="100" cy="115" r="14" fill="#EF4444"/>
+                        <text x="100" y="38" text-anchor="middle" font-size="18" font-weight="900" fill="#14532D">BERBAGI MAKANAN</text>
+                    `;
+                    break;
+                case "wheelchair_friend":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#sky3d)"/>
+                        ${boyHead(115, 72, "happy", false)}
+                        <rect x="92" y="96" width="45" height="42" rx="12" fill="#0EA5E9"/>
+                        <circle cx="115" cy="145" r="24" fill="none" stroke="#1E293B" stroke-width="7"/>
+                        ${girlHead(58, 78, "happy", "#10B981")}
+                        <path d="M 40 102 L 75 102 L 80 165 L 35 165 Z" fill="#10B981"/>
+                    `;
+                    break;
+                case "rain_sun":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#sky3d)"/>
+                        <circle cx="65" cy="65" r="26" fill="#FACC15" filter="url(#shadow3d)"/>
+                        <path d="M 95 95 Q 95 65 125 65 Q 155 65 155 95 Z" fill="#FFFFFF" filter="url(#shadow3d)"/>
+                        <line x1="110" y1="105" x2="105" y2="125" stroke="#0284C7" stroke-width="5" stroke-linecap="round"/>
+                        <line x1="130" y1="105" x2="125" y2="125" stroke="#0284C7" stroke-width="5" stroke-linecap="round"/>
+                        <line x1="145" y1="105" x2="140" y2="125" stroke="#0284C7" stroke-width="5" stroke-linecap="round"/>
+                        <text x="100" y="165" text-anchor="middle" font-size="17" font-weight="900" fill="#0369A1">HUJAN & MATAHARI</text>
+                    `;
+                    break;
+                case "sick_bed":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#purple3d)"/>
+                        <rect x="30" y="110" width="140" height="50" rx="12" fill="#FFF"/>
+                        <rect x="30" y="125" width="140" height="35" rx="8" fill="#60A5FA"/>
+                        ${boyHead(65, 98, "sad", false)}
+                        <rect x="52" y="75" width="26" height="9" rx="4" fill="#EF4444"/>
+                        <text x="100" y="42" text-anchor="middle" font-size="18" font-weight="900" fill="#581C87">SEDANG SAKIT</text>
+                    `;
+                    break;
+                case "study_hard":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#amber3d)"/>
+                        ${girlHead(100, 72, "happy", "#F97316")}
+                        <rect x="50" y="130" width="100" height="35" rx="10" fill="#78350F"/>
+                        <rect x="70" y="112" width="60" height="20" rx="4" fill="#FFF"/>
+                        <text x="100" y="38" text-anchor="middle" font-size="18" font-weight="900" fill="#78350F">RAJIN BELAJAR</text>
+                    `;
+                    break;
+                case "pray_dua":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#green3d)"/>
+                        <rect x="70" y="102" width="60" height="65" rx="20" fill="#16A34A"/>
+                        ${boyHead(100, 75, "happy", true)}
+                        <ellipse cx="82" cy="122" rx="11" ry="15" fill="url(#skin3d)"/>
+                        <ellipse cx="118" cy="122" rx="11" ry="15" fill="url(#skin3d)"/>
+                        <text x="100" y="38" text-anchor="middle" font-size="18" font-weight="900" fill="#14532D">BERDOA & SABAR</text>
+                    `;
+                    break;
+                case "baby_born":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#sky3d)"/>
+                        <ellipse cx="100" cy="115" rx="48" ry="38" fill="#FDE047" filter="url(#shadow3d)"/>
+                        <circle cx="100" cy="100" r="24" fill="url(#skin3d)"/>
+                        <circle cx="92" cy="96" r="3" fill="#1E293B"/>
+                        <circle cx="108" cy="96" r="3" fill="#1E293B"/>
+                        <path d="M 93 108 Q 100 115 107 108" stroke="#7C2D12" stroke-width="3" fill="none"/>
+                        <text x="100" y="42" text-anchor="middle" font-size="18" font-weight="900" fill="#0369A1">KELAHIRAN BAYI</text>
+                    `;
+                    break;
+                case "trash_bin":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#green3d)"/>
+                        ${boyHead(65, 75, "happy", true)}
+                        <rect x="42" y="100" width="46" height="65" rx="16" fill="#0284C7"/>
+                        <!-- Tempat Sampah Hijau -->
+                        <rect x="115" y="100" width="48" height="65" rx="8" fill="#15803D" filter="url(#shadow3d)"/>
+                        <rect x="110" y="92" width="58" height="10" rx="5" fill="#166534"/>
+                        <circle cx="135" cy="75" r="10" fill="#FACC15"/>
+                        <text x="100" y="38" text-anchor="middle" font-size="16" font-weight="900" fill="#14532D">BUANG DI TEMPAT SAMPAH</text>
+                    `;
+                    break;
+                case "trash_floor":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#red3d)"/>
+                        ${boyHead(75, 75, "angry", false)}
+                        <rect x="52" y="100" width="46" height="65" rx="16" fill="#DC2626"/>
+                        <circle cx="125" cy="158" r="10" fill="#FFF"/>
+                        <circle cx="148" cy="162" r="12" fill="#FACC15"/>
+                        <text x="100" y="38" text-anchor="middle" font-size="16" font-weight="900" fill="#7F1D1D">BUANG DI LANTAI ❌</text>
+                    `;
+                    break;
+                case "trash_river":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#red3d)"/>
+                        <path d="M 20 135 Q 100 120 180 135 L 180 180 L 20 180 Z" fill="#0EA5E9"/>
+                        <circle cx="80" cy="150" r="11" fill="#FACC15"/>
+                        <rect x="115" y="142" width="22" height="14" rx="4" fill="#EF4444"/>
+                        <text x="100" y="55" text-anchor="middle" font-size="18" font-weight="900" fill="#7F1D1D">SAMPAH DI SUNGAI ❌</text>
+                    `;
+                    break;
+                case "water_plants":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#green3d)"/>
+                        ${girlHead(62, 75, "happy", "#EC4899")}
+                        <path d="M 40 100 L 84 100 L 90 165 L 34 165 Z" fill="#EC4899"/>
+                        <!-- Pot Bunga -->
+                        <polygon points="120,135 160,135 152,168 128,168" fill="#D97706"/>
+                        <circle cx="140" cy="112" r="18" fill="#EF4444"/>
+                        <circle cx="140" cy="112" r="7" fill="#FACC15"/>
+                        <text x="100" y="38" text-anchor="middle" font-size="18" font-weight="900" fill="#14532D">MENYIRAM TANAMAN</text>
+                    `;
+                    break;
+                case "sweep_class":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#sky3d)"/>
+                        ${boyHead(75, 75, "happy", true)}
+                        <rect x="52" y="100" width="46" height="65" rx="16" fill="#0284C7"/>
+                        <line x1="105" y1="95" x2="135" y2="155" stroke="#92400E" stroke-width="6"/>
+                        <polygon points="120,152 152,152 158,172 114,172" fill="#F59E0B"/>
+                        <text x="100" y="38" text-anchor="middle" font-size="18" font-weight="900" fill="#0369A1">MENYAPU KELAS</text>
+                    `;
+                    break;
+                case "save_water":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#sky3d)"/>
+                        <rect x="65" y="70" width="50" height="18" rx="6" fill="#64748B"/>
+                        <rect x="105" y="70" width="18" height="32" rx="6" fill="#64748B"/>
+                        <path d="M 80 55 L 105 55" stroke="#EF4444" stroke-width="8" stroke-linecap="round"/>
+                        <text x="100" y="145" text-anchor="middle" font-size="18" font-weight="900" fill="#0369A1">TUTUP KERAN AIR</text>
+                    `;
+                    break;
+                case "break_plants":
+                    content = `
+                        <rect x="10" y="10" width="180" height="180" rx="35" fill="url(#red3d)"/>
+                        <polygon points="80,135 120,135 112,168 88,168" fill="#92400E"/>
+                        <path d="M 100 135 L 100 110 L 125 125" stroke="#15803D" stroke-width="6" fill="none"/>
+                        <text x="100" y="55" text-anchor="middle" font-size="18" font-weight="900" fill="#7F1D1D">MERUSAK TANAMAN ❌</text>
+                    `;
+                    break;
+                default:
+                    content = `<rect x="10" y="10" width="180" height="180" rx="35" fill="url(#sky3d)"/>${boyHead(100, 100, "happy", true)}`;
+            }
+
+            return `<svg viewBox="0 0 200 200" class="w-full h-full rounded-2xl">${defs}${content}</svg>`;
+        }
+
+        // Tampilkan ilustrasi halaman pembuka
+        document.getElementById('welcome-illustration').innerHTML = create3DScene("welcome");
+
+        // =========================================================================
+        // 2. BANK 40 SOAL LENGKAP SLB FASE C (4 MATERI x 10 SOAL)
+        // =========================================================================
+        const quizData = [
+            // --- MATERI 1: QS AL-KAFIRUN (SOAL 1 - 10) ---
+            {
+                id: 1, topic: "1. QS Al-Kafirun",
+                indicator: "Mengenal gambar anak yang sedang membaca Al-Qur'an (QS Al-Kafirun).",
+                question: "Mana gambar anak yang sedang membaca surat Al-Kafirun?",
+                mainImg: "quran_read",
+                options: [
+                    { label: "Membaca Al-Qur'an", img: "quran_read" },
+                    { label: "Membuang sampah sembarangan", img: "trash_floor" },
+                    { label: "Mengejek teman", img: "mocking_bad" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 0
+            },
+            {
+                id: 2, topic: "1. QS Al-Kafirun",
+                indicator: "Mengidentifikasi tempat ibadah umat Islam sesuai pengamalan QS Al-Kafirun.",
+                question: "Di mana tempat ibadah umat Islam untuk shalat?",
+                mainImg: "mosque",
+                options: [
+                    { label: "Di sungai kotor", img: "trash_river" },
+                    { label: "Di Masjid", img: "mosque" },
+                    { label: "Di tempat ibadah lain", img: "church_temple" },
+                    { label: "Di tempat tidur", img: "sick_bed" }
+                ],
+                correct: 1
+            },
+            {
+                id: 3, topic: "1. QS Al-Kafirun",
+                indicator: "Menunjukkan sikap menghormati teman yang berbeda agama saat beribadah.",
+                question: "Teman berbeda agama sedang beribadah. Sikap kita yang baik adalah?",
+                mainImg: "church_temple",
+                options: [
+                    { label: "Mengejek dan mengganggu", img: "mocking_bad" },
+                    { label: "Membuang sampah di sana", img: "trash_floor" },
+                    { label: "Menghormati dan rukun", img: "respect_friends" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 2
+            },
+            {
+                id: 4, topic: "1. QS Al-Kafirun",
+                indicator: "Mengenal arah kiblat shalat umat Islam.",
+                question: "Saat shalat, umat Islam menghadap ke arah mana?",
+                mainImg: "pray_islam",
+                options: [
+                    { label: "Arah Ka'bah", img: "kaaba" },
+                    { label: "Arah sungai", img: "trash_river" },
+                    { label: "Arah tempat sampah", img: "trash_bin" },
+                    { label: "Arah tanaman rusak", img: "break_plants" }
+                ],
+                correct: 0
+            },
+            {
+                id: 5, topic: "1. QS Al-Kafirun",
+                indicator: "Memahami pesan pokok QS Al-Kafirun: Bagiku agamaku, bagimu agamamu.",
+                question: "Mana gambar anak Islam yang rajin melaksanakan shalat sendiri?",
+                mainImg: "pray_islam",
+                options: [
+                    { label: "Mengejek teman", img: "mocking_bad" },
+                    { label: "Membuang sampah sembarangan", img: "trash_floor" },
+                    { label: "Merusak bunga", img: "break_plants" },
+                    { label: "Melaksanakan shalat dengan khusyuk", img: "pray_islam" }
+                ],
+                correct: 3
+            },
+            {
+                id: 6, topic: "1. QS Al-Kafirun",
+                indicator: "Menunjukkan perilaku rukun berteman walau berbeda keyakinan.",
+                question: "Mana gambar berteman rukun tanpa membeda-bedakan agama?",
+                mainImg: "respect_friends",
+                options: [
+                    { label: "Berteman rukun dan tersenyum", img: "respect_friends" },
+                    { label: "Marah dan mengejek teman", img: "mocking_bad" },
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Mengotori sungai", img: "trash_river" }
+                ],
+                correct: 0
+            },
+            {
+                id: 7, topic: "1. QS Al-Kafirun",
+                indicator: "Membedakan adab yang baik saat mendengar bacaan Al-Qur'an.",
+                question: "Saat teman membaca surat Al-Kafirun, kita harus bersikap?",
+                mainImg: "quran_read",
+                options: [
+                    { label: "Berteriak dan mengejek", img: "mocking_bad" },
+                    { label: "Mendengarkan dengan tenang", img: "pray_dua" },
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Mematahkan tanaman", img: "break_plants" }
+                ],
+                correct: 1
+            },
+            {
+                id: 8, topic: "1. QS Al-Kafirun",
+                indicator: "Mengetahui jumlah ayat atau identitas dasar QS Al-Kafirun melalui simbol visual.",
+                question: "Surat Al-Kafirun mengajarkan kita untuk hanya menyembah kepada?",
+                mainImg: "kaaba",
+                options: [
+                    { label: "Menyembah Allah SWT (Shalat)", img: "pray_islam" },
+                    { label: "Mengejek sesama", img: "mocking_bad" },
+                    { label: "Mengotori lingkungan", img: "trash_river" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 0
+            },
+            {
+                id: 9, topic: "1. QS Al-Kafirun",
+                indicator: "Menunjukkan sikap tidak memaksakan agama kepada teman.",
+                question: "Bolehkah kita memaksa teman berbeda agama ikut shalat di masjid?",
+                mainImg: "mosque",
+                options: [
+                    { label: "Boleh memaksa dengan marah", img: "mocking_bad" },
+                    { label: "Tidak boleh, kita saling menghormati", img: "respect_friends" },
+                    { label: "Membuang sampah di depan masjid", img: "trash_floor" },
+                    { label: "Merusak tanaman sekolah", img: "break_plants" }
+                ],
+                correct: 1
+            },
+            {
+                id: 10, topic: "1. QS Al-Kafirun",
+                indicator: "Mengamalkan bacaan Al-Qur'an dalam kehidupan sehari-hari.",
+                question: "Mana anak yang rajin mengaji di rumah?",
+                mainImg: "quran_read",
+                options: [
+                    { label: "Mengotori sungai", img: "trash_river" },
+                    { label: "Mengejek teman", img: "mocking_bad" },
+                    { label: "Membaca Al-Qur'an dengan gembira", img: "quran_read" },
+                    { label: "Membuang sampah sembarangan", img: "trash_floor" }
+                ],
+                correct: 2
+            },
+
+            // --- MATERI 2: HADIS MENGHORMATI PERBEDAAN (SOAL 11 - 20) ---
+            {
+                id: 11, topic: "2. Hadis Menghormati Perbedaan",
+                indicator: "Menunjukkan sikap saling menyayangi dan menghormati sesama teman.",
+                question: "Mana gambar anak yang mengamalkan hadis menyayangi sesama?",
+                mainImg: "respect_friends",
+                options: [
+                    { label: "Berteman akrab dan saling menyapa", img: "respect_friends" },
+                    { label: "Mengejek teman hingga sedih", img: "mocking_bad" },
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Merusak bunga di taman", img: "break_plants" }
+                ],
+                correct: 0
+            },
+            {
+                id: 12, topic: "2. Hadis Menghormati Perbedaan",
+                indicator: "Menghormati teman yang memiliki perbedaan fisik (disabilitas).",
+                question: "Ada teman yang memakai kursi roda. Sikap kita yang baik adalah?",
+                mainImg: "wheelchair_friend",
+                options: [
+                    { label: "Menjauhi dan mengejeknya", img: "mocking_bad" },
+                    { label: "Menemani bermain dengan ramah", img: "wheelchair_friend" },
+                    { label: "Membuang sampah di dekatnya", img: "trash_floor" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 1
+            },
+            {
+                id: 13, topic: "2. Hadis Menghormati Perbedaan",
+                indicator: "Menunjukkan perilaku menolong teman yang terjatuh tanpa membeda-bedakan.",
+                question: "Temanmu terjatuh saat bermain. Apa yang harus kamu lakukan?",
+                mainImg: "helping_friend",
+                options: [
+                    { label: "Menertawakan teman", img: "mocking_bad" },
+                    { label: "Membuang sampah ke lantai", img: "trash_floor" },
+                    { label: "Segera menolong teman berdiri", img: "helping_friend" },
+                    { label: "Mengotori sungai", img: "trash_river" }
+                ],
+                correct: 2
+            },
+            {
+                id: 14, topic: "2. Hadis Menghormati Perbedaan",
+                indicator: "Menunjukkan perilaku berbagi makanan dengan teman yang berbeda suku/daerah.",
+                question: "Mana gambar anak yang suka berbagi makanan dengan teman?",
+                mainImg: "sharing_food",
+                options: [
+                    { label: "Berbagi makanan bersama teman", img: "sharing_food" },
+                    { label: "Marah kepada teman", img: "mocking_bad" },
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Mematahkan tanaman", img: "break_plants" }
+                ],
+                correct: 0
+            },
+            {
+                id: 15, topic: "2. Hadis Menghormati Perbedaan",
+                indicator: "Menghindari perilaku mengejek atau merundung teman.",
+                question: "Perbuatan mana yang DILARANG oleh Nabi Muhammad SAW?",
+                mainImg: "respect_friends",
+                options: [
+                    { label: "Menolong teman", img: "helping_friend" },
+                    { label: "Berbagi bekal makanan", img: "sharing_food" },
+                    { label: "Menyiram tanaman", img: "water_plants" },
+                    { label: "Mengejek dan menyakiti teman", img: "mocking_bad" }
+                ],
+                correct: 3
+            },
+            {
+                id: 16, topic: "2. Hadis Menghormati Perbedaan",
+                indicator: "Menunjukkan sikap rukun saat bekerja sama membersihkan kelas.",
+                question: "Mana gambar bekerja sama dengan rukun bersama teman?",
+                mainImg: "sweep_class",
+                options: [
+                    { label: "Mengejek teman yang bekerja", img: "mocking_bad" },
+                    { label: "Menyapu kelas dengan gembira", img: "sweep_class" },
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Mengotori sungai", img: "trash_river" }
+                ],
+                correct: 1
+            },
+            {
+                id: 17, topic: "2. Hadis Menghormati Perbedaan",
+                indicator: "Menunjukkan empati saat teman sedang sakit.",
+                question: "Teman kita sedang sakit di rumah. Sikap kita yang baik adalah?",
+                mainImg: "sick_bed",
+                options: [
+                    { label: "Mendoakan agar cepat sembuh", img: "pray_dua" },
+                    { label: "Mengejek teman yang sakit", img: "mocking_bad" },
+                    { label: "Membuang sampah sembarangan", img: "trash_floor" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 0
+            },
+            {
+                id: 18, topic: "2. Hadis Menghormati Perbedaan",
+                indicator: "Mengenal ucapan salam sebagai tanda kasih sayang sesama muslim.",
+                question: "Saat bertemu teman di sekolah, kita mengucapkan salam sambil?",
+                mainImg: "welcome",
+                options: [
+                    { label: "Marah dan cemberut", img: "mocking_bad" },
+                    { label: "Tersenyum ramah menyapa", img: "welcome" },
+                    { label: "Membuang sampah ke lantai", img: "trash_floor" },
+                    { label: "Merusak bunga", img: "break_plants" }
+                ],
+                correct: 1
+            },
+            {
+                id: 19, topic: "2. Hadis Menghormati Perbedaan",
+                indicator: "Menghargai teman yang berbeda warna kulit atau rambut.",
+                question: "Teman kita berbeda warna kulit dan rambut. Kita harus?",
+                mainImg: "respect_friends",
+                options: [
+                    { label: "Mengejeknya", img: "mocking_bad" },
+                    { label: "Membuang sampah di dekatnya", img: "trash_floor" },
+                    { label: "Tetap berteman baik dan rukun", img: "respect_friends" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 2
+            },
+            {
+                id: 20, topic: "2. Hadis Menghormati Perbedaan",
+                indicator: "Menunjukkan sikap saling membantu antar teman di sekolah.",
+                question: "Mana anak yang menolong teman saat kesulitan?",
+                mainImg: "helping_friend",
+                options: [
+                    { label: "Mengulurkan tangan menolong teman", img: "helping_friend" },
+                    { label: "Mengejek teman", img: "mocking_bad" },
+                    { label: "Mengotori sungai", img: "trash_river" },
+                    { label: "Membuang sampah di lantai", img: "trash_floor" }
+                ],
+                correct: 0
+            },
+
+            // --- MATERI 3: IMAN KEPADA QADA DAN QADAR (SOAL 21 - 30) ---
+            {
+                id: 21, topic: "3. Iman kepada Qada & Qadar",
+                indicator: "Mengenal turunnya hujan dan terbitnya matahari sebagai ketetapan Allah (Qadar).",
+                question: "Siapa yang mengatur turunnya hujan dan terbitnya matahari?",
+                mainImg: "rain_sun",
+                options: [
+                    { label: "Ketetapan Allah SWT (Berdoa syukur)", img: "pray_dua" },
+                    { label: "Membuang sampah di sungai", img: "trash_river" },
+                    { label: "Mengejek teman", img: "mocking_bad" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 0
+            },
+            {
+                id: 22, topic: "3. Iman kepada Qada & Qadar",
+                indicator: "Mengenal kelahiran bayi (laki-laki/perempuan) sebagai ketetapan Allah.",
+                question: "Kelahiran adik bayi yang lucu adalah ketetapan dari?",
+                mainImg: "baby_born",
+                options: [
+                    { label: "Mengejek orang lain", img: "mocking_bad" },
+                    { label: "Allah SWT (Kita bersyukur)", img: "baby_born" },
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Merusak bunga", img: "break_plants" }
+                ],
+                correct: 1
+            },
+            {
+                id: 23, topic: "3. Iman kepada Qada & Qadar",
+                indicator: "Menunjukkan ikhtiar (usaha) belajar rajin agar menjadi anak pintar.",
+                question: "Agar menjadi anak pintar, usaha (ikhtiar) yang harus dilakukan adalah?",
+                mainImg: "study_hard",
+                options: [
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Mengejek teman", img: "mocking_bad" },
+                    { label: "Rajin belajar dan membaca buku", img: "study_hard" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 2
+            },
+            {
+                id: 24, topic: "3. Iman kepada Qada & Qadar",
+                indicator: "Menunjukkan sikap sabar dan berdoa saat sedang diuji sakit.",
+                question: "Saat sedang sakit, sikap anak yang beriman kepada takdir Allah adalah?",
+                mainImg: "sick_bed",
+                options: [
+                    { label: "Sabar dan berdoa memohon kesembuhan", img: "pray_dua" },
+                    { label: "Marah dan mengejek", img: "mocking_bad" },
+                    { label: "Membuang sampah sembarangan", img: "trash_floor" },
+                    { label: "Mengotori sungai", img: "trash_river" }
+                ],
+                correct: 0
+            },
+            {
+                id: 25, topic: "3. Iman kepada Qada & Qadar",
+                indicator: "Mengenal sikap berdoa setelah berusaha (tawakal).",
+                question: "Setelah rajin belajar, kita menyerahkan hasilnya kepada Allah dengan cara?",
+                mainImg: "study_hard",
+                options: [
+                    { label: "Membuang sampah ke sungai", img: "trash_river" },
+                    { label: "Berdoa kepada Allah SWT", img: "pray_dua" },
+                    { label: "Mengejek teman", img: "mocking_bad" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 1
+            },
+            {
+                id: 26, topic: "3. Iman kepada Qada & Qadar",
+                indicator: "Menunjukkan rasa syukur saat turun hujan yang menyuburkan tanaman.",
+                question: "Saat hujan turun menyirami bumi, tanaman menjadi subur. Kita harus?",
+                mainImg: "rain_sun",
+                options: [
+                    { label: "Merusak tanaman", img: "break_plants" },
+                    { label: "Membuang sampah ke sungai", img: "trash_river" },
+                    { label: "Bersyukur kepada Allah SWT", img: "pray_dua" },
+                    { label: "Mengejek teman", img: "mocking_bad" }
+                ],
+                correct: 2
+            },
+            {
+                id: 27, topic: "3. Iman kepada Qada & Qadar",
+                indicator: "Memahami bahwa kesehatan adalah nikmat Allah yang harus dijaga.",
+                question: "Agar tubuh tetap sehat, kita menjaga kebersihan dengan cara?",
+                mainImg: "trash_bin",
+                options: [
+                    { label: "Membuang sampah di tempat sampah", img: "trash_bin" },
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Mengotori sungai", img: "trash_river" },
+                    { label: "Marah-marah", img: "mocking_bad" }
+                ],
+                correct: 0
+            },
+            {
+                id: 28, topic: "3. Iman kepada Qada & Qadar",
+                indicator: "Menunjukkan sikap optimis dan semangat belajar.",
+                question: "Mana gambar anak yang semangat berusaha meraih cita-cita?",
+                mainImg: "study_hard",
+                options: [
+                    { label: "Mengejek teman", img: "mocking_bad" },
+                    { label: "Membuang sampah sembarangan", img: "trash_floor" },
+                    { label: "Merusak bunga", img: "break_plants" },
+                    { label: "Belajar dengan tekun dan tersenyum", img: "study_hard" }
+                ],
+                correct: 3
+            },
+            {
+                id: 29, topic: "3. Iman kepada Qada & Qadar",
+                indicator: "Menunjukkan sikap bersyukur atas nikmat rezeki makanan dari Allah.",
+                question: "Allah memberi kita rezeki makanan. Kita bersyukur dengan cara?",
+                mainImg: "sharing_food",
+                options: [
+                    { label: "Berbagi makanan dengan teman", img: "sharing_food" },
+                    { label: "Membuang makanan ke sungai", img: "trash_river" },
+                    { label: "Mengejek teman", img: "mocking_bad" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 0
+            },
+            {
+                id: 30, topic: "3. Iman kepada Qada & Qadar",
+                indicator: "Mengetahui bahwa berdoa adalah wujud iman kepada ketetapan Allah.",
+                question: "Mana gambar anak yang sedang berdoa kepada Allah SWT?",
+                mainImg: "pray_dua",
+                options: [
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Mengangkat kedua tangan berdoa", img: "pray_dua" },
+                    { label: "Mengejek teman", img: "mocking_bad" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 1
+            },
+
+            // --- MATERI 4: PERILAKU PEDULI LINGKUNGAN SEKOLAH (SOAL 31 - 40) ---
+            {
+                id: 31, topic: "4. Peduli Lingkungan Sekolah",
+                indicator: "Menunjukkan perilaku membuang sampah pada tempatnya.",
+                question: "Mana anak yang membuang sampah pada tempatnya?",
+                mainImg: "trash_bin",
+                options: [
+                    { label: "Membuang sampah ke tempat sampah", img: "trash_bin" },
+                    { label: "Membuang sampah ke lantai", img: "trash_floor" },
+                    { label: "Membuang sampah ke sungai", img: "trash_river" },
+                    { label: "Merusak tanaman", img: "break_plants" }
+                ],
+                correct: 0
+            },
+            {
+                id: 32, topic: "4. Peduli Lingkungan Sekolah",
+                indicator: "Menunjukkan perilaku merawat tanaman sekolah dengan menyiramnya.",
+                question: "Tanaman di taman sekolah terlihat layu. Apa yang harus dilakukan?",
+                mainImg: "water_plants",
+                options: [
+                    { label: "Mematahkan batangnya", img: "break_plants" },
+                    { label: "Menyiram tanaman dengan air", img: "water_plants" },
+                    { label: "Membuang sampah di pot", img: "trash_floor" },
+                    { label: "Mengejek teman", img: "mocking_bad" }
+                ],
+                correct: 1
+            },
+            {
+                id: 33, topic: "4. Peduli Lingkungan Sekolah",
+                indicator: "Menunjukkan perilaku menjaga kebersihan ruang kelas dengan menyapu.",
+                question: "Lantai kelas terlihat kotor. Mana anak yang membersihkan kelas?",
+                mainImg: "sweep_class",
+                options: [
+                    { label: "Membuang sampah lagi di lantai", img: "trash_floor" },
+                    { label: "Mengotori sungai", img: "trash_river" },
+                    { label: "Menyapu lantai kelas hingga bersih", img: "sweep_class" },
+                    { label: "Merusak bunga", img: "break_plants" }
+                ],
+                correct: 2
+            },
+            {
+                id: 34, topic: "4. Peduli Lingkungan Sekolah",
+                indicator: "Menunjukkan perilaku menghemat air di sekolah.",
+                question: "Setelah mencuci tangan di sekolah, kita harus?",
+                mainImg: "save_water",
+                options: [
+                    { label: "Menutup keran air rapat-rapat", img: "save_water" },
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Merusak tanaman", img: "break_plants" },
+                    { label: "Mengejek teman", img: "mocking_bad" }
+                ],
+                correct: 0
+            },
+            {
+                id: 35, topic: "4. Peduli Lingkungan Sekolah",
+                indicator: "Membedakan perbuatan yang merusak lingkungan sekolah.",
+                question: "Perbuatan mana yang MERUSAK lingkungan sekolah?",
+                mainImg: "water_plants",
+                options: [
+                    { label: "Menyiram bunga", img: "water_plants" },
+                    { label: "Menyapu kelas", img: "sweep_class" },
+                    { label: "Membuang sampah di tempatnya", img: "trash_bin" },
+                    { label: "Mematahkan dan merusak tanaman", img: "break_plants" }
+                ],
+                correct: 3
+            },
+            {
+                id: 36, topic: "4. Peduli Lingkungan Sekolah",
+                indicator: "Menjaga kebersihan sungai dan saluran air di sekitar sekolah.",
+                question: "Bolehkah kita membuang sampah plastik ke sungai?",
+                mainImg: "trash_river",
+                options: [
+                    { label: "Tidak boleh, buang di tempat sampah", img: "trash_bin" },
+                    { label: "Boleh buang ke sungai", img: "trash_river" },
+                    { label: "Boleh buang ke lantai", img: "trash_floor" },
+                    { label: "Boleh merusak tanaman", img: "break_plants" }
+                ],
+                correct: 0
+            },
+            {
+                id: 37, topic: "4. Peduli Lingkungan Sekolah",
+                indicator: "Menunjukkan sikap peduli saat melihat sampah berserakan di halaman sekolah.",
+                question: "Kamu melihat sampah plastik di halaman sekolah. Sikapmu adalah?",
+                mainImg: "trash_floor",
+                options: [
+                    { label: "Membiarkannya saja", img: "mocking_bad" },
+                    { label: "Memungut dan buang ke tempat sampah", img: "trash_bin" },
+                    { label: "Membuang ke sungai", img: "trash_river" },
+                    { label: "Menginjak tanaman", img: "break_plants" }
+                ],
+                correct: 1
+            },
+            {
+                id: 38, topic: "4. Peduli Lingkungan Sekolah",
+                indicator: "Menunjukkan kerja sama piket kelas bersama teman.",
+                question: "Mana gambar anak yang rajin melaksanakan piket kebersihan kelas?",
+                mainImg: "sweep_class",
+                options: [
+                    { label: "Mengejek teman yang piket", img: "mocking_bad" },
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Menyapu kelas dengan bersih", img: "sweep_class" },
+                    { label: "Merusak bunga", img: "break_plants" }
+                ],
+                correct: 2
+            },
+            {
+                id: 39, topic: "4. Peduli Lingkungan Sekolah",
+                indicator: "Menunjukkan rasa cinta alam sebagai ciptaan Allah SWT.",
+                question: "Merawat bunga dan tanaman di sekolah membuat sekolah menjadi indah. Mana gambarnya?",
+                mainImg: "water_plants",
+                options: [
+                    { label: "Menyiram dan merawat bunga", img: "water_plants" },
+                    { label: "Mematahkan tanaman", img: "break_plants" },
+                    { label: "Membuang sampah di sungai", img: "trash_river" },
+                    { label: "Mengotori lantai", img: "trash_floor" }
+                ],
+                correct: 0
+            },
+            {
+                id: 40, topic: "4. Peduli Lingkungan Sekolah",
+                indicator: "Menunjukkan kebiasaan hidup bersih dan hemat air di sekolah.",
+                question: "Kebersihan adalah sebagian dari iman. Mana perilaku terpuji di sekolah?",
+                mainImg: "save_water",
+                options: [
+                    { label: "Membuang sampah di lantai", img: "trash_floor" },
+                    { label: "Menghemat air dengan menutup keran", img: "save_water" },
+                    { label: "Mengotori sungai", img: "trash_river" },
+                    { label: "Mengejek teman", img: "mocking_bad" }
+                ],
+                correct: 1
+            }
+        ];
+
+        // =========================================================================
+        // 3. STATE APLIKASI & NAVIGASI
+        // =========================================================================
+        let currentIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        const optionLetters = ["A", "B", "C", "D"];
+
+        function startExam() {
+            const nameInput = document.getElementById('student-name').value.trim();
+            if (!nameInput) {
+                document.getElementById('student-name').value = "Peserta Didik Fase C";
+            }
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+            currentIndex = 0;
+            renderQuestion(true);
+        }
+
+        function renderQuestion(autoSpeak = false) {
+            const q = quizData[currentIndex];
+            
+            // Update indikator kemajuan
+            document.getElementById('badge-number').textContent = `SOAL ${q.id} / ${quizData.length}`;
+            document.getElementById('badge-topic').textContent = q.topic;
+            const percent = ((currentIndex + 1) / quizData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+
+            // Update ilustrasi utama & teks soal
+            document.getElementById('main-question-image').innerHTML = create3DScene(q.mainImg);
+            document.getElementById('question-text').textContent = q.question;
+
+            // Render 4 Kartu Pilihan Gambar Besar (A, B, C, D)
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = "";
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = userAnswers[currentIndex] === idx;
+                const card = document.createElement('div');
+                card.className = `option-card p-4 flex flex-col items-center text-center ${isSelected ? 'selected' : ''}`;
+                card.onclick = () => selectOption(idx);
+
+                card.innerHTML = `
+                    <div class="w-full flex justify-between items-center mb-2">
+                        <span class="option-badge w-11 h-11 rounded-2xl bg-sky-100 text-sky-800 font-black text-2xl flex items-center justify-center border-2 border-sky-300 transition-transform">
+                            ${optionLetters[idx]}
+                        </span>
+                        ${isSelected ? '<span class="text-amber-600 font-black text-xl"><i class="fas fa-check-circle"></i> DIPILIH</span>' : ''}
+                    </div>
+                    <div class="w-36 h-36 sm:w-40 sm:h-40 my-1 flex items-center justify-center">
+                        ${create3DScene(opt.img)}
+                    </div>
+                    <div class="mt-2 font-extrabold text-slate-800 text-base sm:text-lg leading-tight">
+                        ${opt.label}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Update tombol navigasi
+            document.getElementById('btn-prev').disabled = (currentIndex === 0);
+            const answered = userAnswers.filter(a => a !== null).length;
+            document.getElementById('answered-count').textContent = `Terjawab: ${answered} / ${quizData.length}`;
+
+            if (currentIndex === quizData.length - 1) {
+                document.getElementById('btn-next').classList.add('hidden');
+                document.getElementById('btn-finish').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-next').classList.remove('hidden');
+                document.getElementById('btn-finish').classList.add('hidden');
+            }
+
+            if (autoSpeak) {
+                setTimeout(() => speakQuestion(), 350);
+            }
+        }
+
+        function selectOption(optionIdx) {
+            userAnswers[currentIndex] = optionIdx;
+            playClickSound();
+            renderQuestion(false);
+            
+            // Bacakan label pilihan yang disentuh siswa sebagai umpan balik audio ramah anak
+            const chosenLabel = quizData[currentIndex].options[optionIdx].label;
+            speakText(`Pilihan ${optionLetters[optionIdx]}. ${chosenLabel}`);
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion(true);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIndex < quizData.length - 1) {
+                currentIndex++;
+                renderQuestion(true);
+            }
+        }
+
+        // =========================================================================
+        // 4. FITUR SUARA BAHASA INDONESIA (TEXT-TO-SPEECH) & EFEK SUARA LEMBUT
+        // =========================================================================
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'id-ID';
+                utterance.rate = 0.88; // Tempo sedikit lambat agar jelas dipahami siswa tunagrahita
+                utterance.pitch = 1.08; // Nada ramah & bersahabat
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function speakQuestion() {
+            const q = quizData[currentIndex];
+            const fullSpeech = `Soal nomor ${q.id}. ${q.question}`;
+            speakText(fullSpeech);
+        }
+
+        function repeatQuestion() {
+            speakQuestion();
+        }
+
+        function playClickSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(520, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(780, ctx.currentTime + 0.12);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.12);
+            } catch (e) {}
+        }
+
+        // =========================================================================
+        // 5. PETA SOAL, KONFIRMASI SELESAI & PERHITUNGAN NILAI
+        // =========================================================================
+        function toggleQuestionMap() {
+            const modal = document.getElementById('modal-map');
+            if (modal.classList.contains('hidden')) {
+                const grid = document.getElementById('map-grid');
+                grid.innerHTML = "";
+                quizData.forEach((q, idx) => {
+                    const btn = document.createElement('button');
+                    const isAnswered = userAnswers[idx] !== null;
+                    const isCurrent = idx === currentIndex;
+                    btn.className = `p-3 rounded-xl font-black text-lg border-2 ${
+                        isCurrent ? 'bg-amber-400 border-amber-600 text-slate-900' :
+                        isAnswered ? 'bg-green-500 border-green-700 text-white' :
+                        'bg-slate-100 border-slate-300 text-slate-700'
+                    }`;
+                    btn.textContent = q.id;
+                    btn.onclick = () => {
+                        currentIndex = idx;
+                        toggleQuestionMap();
+                        renderQuestion(true);
+                    };
+                    grid.appendChild(btn);
+                });
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function confirmFinish() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            const textEl = document.getElementById('confirm-unanswered-text');
+            if (unanswered > 0) {
+                textEl.textContent = `Masih ada ${unanswered} soal yang belum dipilih gambarnya. Mau selesai sekarang?`;
+            } else {
+                textEl.textContent = "Semua 40 soal sudah dijawab! Ayo lihat nilaimu.";
+            }
+            document.getElementById('modal-confirm').classList.remove('hidden');
+            document.getElementById('modal-confirm').classList.add('flex');
+            speakText("Apakah kamu sudah selesai mengerjakan? Tekan tombol hijau jika sudah selesai.");
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('modal-confirm').classList.add('hidden');
+            document.getElementById('modal-confirm').classList.remove('flex');
+        }
+
+        function finishExam() {
+            closeConfirmModal();
+            window.speechSynthesis.cancel();
+
+            let correctCount = 0;
+            const topicScores = {
+                "1. QS Al-Kafirun": 0,
+                "2. Hadis Menghormati Perbedaan": 0,
+                "3. Iman kepada Qada & Qadar": 0,
+                "4. Peduli Lingkungan Sekolah": 0
+            };
+
+            quizData.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correct) {
+                    correctCount++;
+                    topicScores[q.topic]++;
+                }
+            });
+
+            const wrongCount = quizData.length - correctCount;
+            // Rumus Nilai = (Jumlah jawaban benar / 40) x 100
+            const finalScore = Math.round((correctCount / 40) * 100);
+
+            // Tampilkan data siswa
+            const name = document.getElementById('student-name').value || "Peserta Didik";
+            const cls = document.getElementById('student-class').value || "Fase C";
+            const date = document.getElementById('exam-date').value || "-";
+            document.getElementById('result-student-info').textContent = `Nama: ${name} • Kelas: ${cls} • Tanggal: ${date}`;
+
+            document.getElementById('final-score').textContent = finalScore;
+            document.getElementById('total-correct').textContent = correctCount;
+            document.getElementById('total-wrong').textContent = wrongCount;
+
+            // Predikat Apresiatif Ramah Anak
+            let predicate = "PERLU BIMBINGAN ⭐";
+            if (finalScore >= 85) predicate = "SANGAT BAIK ⭐⭐⭐";
+            else if (finalScore >= 70) predicate = "BAIK SEKALI ⭐⭐";
+            else if (finalScore >= 55) predicate = "CUKUP BAIK ⭐";
+            document.getElementById('score-predicate').textContent = predicate;
+
+            // Rincian per materi
+            const breakdownEl = document.getElementById('topic-breakdown');
+            breakdownEl.innerHTML = "";
+            Object.entries(topicScores).forEach(([topic, score]) => {
+                breakdownEl.innerHTML += `
+                    <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200 flex justify-between items-center">
+                        <span class="font-extrabold text-slate-700 text-sm sm:text-base">${topic}</span>
+                        <span class="bg-sky-600 text-white font-black px-3 py-1 rounded-xl text-base">${score} / 10</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+
+            speakText(`Selamat ${name}! Kamu telah menyelesaikan penilaian. Nilai kamu adalah ${finalScore}. Jawaban benar ${correctCount} dari 40 soal.`);
+        }
+
+        function resetExam() {
+            userAnswers = new Array(quizData.length).fill(null);
+            currentIndex = 0;
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-start').classList.remove('hidden');
+        }
+
+        // =========================================================================
+        // 6. KUNCI JAWABAN KHUSUS GURU
+        // =========================================================================
+        function openTeacherKeyModal() {
+            const list = document.getElementById('teacher-key-list');
+            list.innerHTML = "";
+            quizData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correct;
+                const statusBadge = userAns === null 
+                    ? `<span class="bg-slate-200 text-slate-700 px-2 py-1 rounded text-xs font-bold">Kosong</span>`
+                    : isCorrect 
+                    ? `<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">Siswa: ${optionLetters[userAns]} (Benar)</span>`
+                    : `<span class="bg-rose-100 text-rose-800 px-2 py-1 rounded text-xs font-bold">Siswa: ${optionLetters[userAns]} (Salah)</span>`;
+
+                list.innerHTML += `
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <div class="text-xs font-extrabold text-sky-700">${q.topic} • Indikator: ${q.indicator}</div>
+                            <div class="font-bold text-slate-800">${q.id}. ${q.question}</div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            ${statusBadge}
+                            <span class="bg-purple-600 text-white font-black px-3 py-1 rounded-lg text-sm">
+                                Kunci: ${optionLetters[q.correct]} (${q.options[q.correct].label})
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('modal-teacher-key').classList.remove('hidden');
+            document.getElementById('modal-teacher-key').classList.add('flex');
+        }
+
+        function closeTeacherKeyModal() {
+            document.getElementById('modal-teacher-key').classList.add('hidden');
+            document.getElementById('modal-teacher-key').classList.remove('flex');
+        }
+
+        // =========================================================================
+        // 7. GENERATOR DOKUMEN WORD (.DOC) & GOOGLE DOCS READY (LENGKAP)
+        // =========================================================================
+        function openTeacherDocsModal() {
+            document.getElementById('modal-docs').classList.remove('hidden');
+            document.getElementById('modal-docs').classList.add('flex');
+        }
+
+        function closeTeacherDocsModal() {
+            document.getElementById('modal-docs').classList.add('hidden');
+            document.getElementById('modal-docs').classList.remove('flex');
+        }
+
+        function downloadWordDocument() {
+            // Membuat dokumen HTML berformat Microsoft Word (.doc) yang juga 100% kompatibel diunggah ke Google Docs
+            let kisiKisiRows = "";
+            let soalHtml = "";
+            let kunciRows = "";
+
+            quizData.forEach((q) => {
+                // Baris Kisi-kisi
+                kisiKisiRows += `
+                    <tr>
+                        <td style="text-align:center;">${q.id}</td>
+                        <td>${q.topic}</td>
+                        <td>${q.indicator}</td>
+                        <td style="text-align:center;">Pilihan Ganda Gambar</td>
+                    </tr>
+                `;
+
+                // Naskah Soal + Deskripsi Visual Kartun 3D
+                soalHtml += `
+                    <div style="margin-bottom: 18px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; page-break-inside: avoid;">
+                        <p style="margin:0 0 6px 0; font-size:11pt; color:#0369a1;"><strong>Materi: ${q.topic}</strong></p>
+                        <p style="margin:0 0 8px 0; font-size:13pt;"><strong>${q.id}. ${q.question}</strong></p>
+                        <p style="margin:0 0 8px 0; font-size:10pt; background:#f0f9ff; padding:6px;"><em>[Ilustrasi Utama Kartun 3D: ${q.options[q.correct].label} / Konteks ${q.topic}]</em></p>
+                        <table style="width:100%; border-collapse:collapse; font-size:11pt;">
+                            <tr>
+                                <td style="width:50%; padding:4px;"><strong>A.</strong> [Gambar Kartun 3D: ${q.options[0].label}]</td>
+                                <td style="width:50%; padding:4px;"><strong>B.</strong> [Gambar Kartun 3D: ${q.options[1].label}]</td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%; padding:4px;"><strong>C.</strong> [Gambar Kartun 3D: ${q.options[2].label}]</td>
+                                <td style="width:50%; padding:4px;"><strong>D.</strong> [Gambar Kartun 3D: ${q.options[3].label}]</td>
+                            </tr>
+                        </table>
+                    </div>
+                `;
+
+                // Baris Kunci Jawaban
+                kunciRows += `
+                    <tr>
+                        <td style="text-align:center;">${q.id}</td>
+                        <td>${q.topic}</td>
+                        <td style="text-align:center; font-weight:bold;">${optionLetters[q.correct]}</td>
+                        <td>${q.options[q.correct].label}</td>
+                    </tr>
+                `;
+            });
+
+            const docContent = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head><meta charset='utf-8'><title>Perangkat Penilaian Sumatif Akhir SLB Fase C</title>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.5; color: #1e293b; }
+                    h1, h2, h3 { color: #0f172a; }
+                    table.grid { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    table.grid th, table.grid td { border: 1px solid #475569; padding: 8px; font-size: 11pt; }
+                    table.grid th { background-color: #e2e8f0; }
+                </style>
+                </head>
+                <body>
+                    <h1 style="text-align:center;">PERANGKAT PENILAIAN SUMATIF AKHIR (PSA)</h1>
+                    <h2 style="text-align:center;">PENDIDIKAN AGAMA ISLAM DAN BUDI PEKERTI — SLB FASE C (TUNAGRAHITA)</h2>
+                    <hr/>
+
+                    <h2>BAGIAN 1: PETUNJUK PENGGUNAAN APLIKASI BAGI GURU</h2>
+                    <ol>
+                        <li><strong>Persiapan Perangkat:</strong> Buka file aplikasi <code>penilaian_sumatif_slb_fase_c.html</code> menggunakan browser modern (Google Chrome, Safari, atau Edge) pada HP Android, iPhone, Tablet, Laptop, maupun Komputer tanpa perlu koneksi internet tambahan.</li>
+                        <li><strong>Pengisian Identitas:</strong> Guru membantu mengetikkan Nama Siswa, Kelas (Fase C), dan Tanggal pelaksanaan asesmen pada halaman pembuka, lalu menekan tombol hijau <strong>MULAI</strong>.</li>
+                        <li><strong>Pendampingan Audio & Visual:</strong> Setiap halaman hanya menampilkan 1 soal beserta ilustrasi kartun 3D besar. Aplikasi secara otomatis membacakan soal dalam Bahasa Indonesia. Jika siswa belum memahami, guru dapat menekan tombol <strong>BACAKAN SOAL</strong> atau <strong>ULANGI PERTANYAAN</strong> dan mengarahkan siswa menunjuk/menyentuh kartu gambar jawaban (A, B, C, atau D).</li>
+                        <li><strong>Tanpa Batas Waktu:</strong> Siswa diberikan keleluasaan waktu untuk mengamati ekspresi karakter pada gambar dan memilih jawaban tanpa tekanan waktu.</li>
+                        <li><strong>Hasil & Cetak:</strong> Setelah soal nomor 40 selesai, tekan tombol <strong>SELESAI</strong>. Nilai otomatis muncul dan dapat langsung dicetak (PDF/Printer) untuk laporan hasil belajar.</li>
+                    </ol>
+
+                    <br clear=all style='page-break-before:always'>
+                    <h2>BAGIAN 2: KISI-KISI PENILAIAN SUMATIF AKHIR SLB FASE C</h2>
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th style="width:8%;">No</th>
+                                <th style="width:27%;">Materi Pokok</th>
+                                <th style="width:45%;">Indikator Soal (Kompetensi Visual)</th>
+                                <th style="width:20%;">Bentuk Soal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${kisiKisiRows}
+                        </tbody>
+                    </table>
+
+                    <br clear=all style='page-break-before:always'>
+                    <h2>BAGIAN 3: NASKAH 40 SOAL PENILAIAN SUMATIF AKHIR</h2>
+                    ${soalHtml}
+
+                    <br clear=all style='page-break-before:always'>
+                    <h2>BAGIAN 4: KUNCI JAWABAN KHUSUS GURU</h2>
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th style="width:10%;">No</th>
+                                <th style="width:30%;">Materi</th>
+                                <th style="width:15%;">Kunci</th>
+                                <th style="width:45%;">Keterangan Gambar Jawaban Benar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${kunciRows}
+                        </tbody>
+                    </table>
+
+                    <h2>BAGIAN 5: PEDOMAN PENSKORAN & KONVERSI NILAI</h2>
+                    <ul>
+                        <li><strong>Skor Jawaban Benar:</strong> 1 poin per soal.</li>
+                        <li><strong>Skor Jawaban Salah / Tidak Dijawab:</strong> 0 poin.</li>
+                        <li><strong>Skor Maksimal:</strong> 40 poin.</li>
+                        <li><strong>Rumus Nilai Akhir:</strong> <code>Nilai = (Jumlah Jawaban Benar / 40) x 100</code></li>
+                    </ul>
+                    <table class="grid" style="width:70%;">
+                        <thead>
+                            <tr>
+                                <th>Rentang Nilai</th>
+                                <th>Predikat Capaian</th>
+                                <th>Tindak Lanjut Guru</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>85 – 100</td><td>Sangat Baik</td><td>Pengayaan pembiasaan perilaku terpuji sehari-hari.</td></tr>
+                            <tr><td>70 – 84</td><td>Baik Sekali</td><td>Penguatan pada materi yang masih keliru melalui kartu gambar.</td></tr>
+                            <tr><td>55 – 69</td><td>Cukup Baik</td><td>Pendampingan individual menggunakan media visual konkret.</td></tr>
+                            <tr><td>&lt; 55</td><td>Perlu Bimbingan</td><td>Remedial terbimbing dengan pendekatan bermain dan bercerita.</td></tr>
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob(['\ufeff', docContent], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Perangkat_PSA_PAI_SLB_Fase_C_Lengkap.doc';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
